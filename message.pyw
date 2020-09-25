@@ -76,35 +76,6 @@ rareforageables2 = ['morel', 'common mushroom']
 
 sellprices = json.load(open('sellprices.txt', 'r'))
 
-#we keep this for uh archival purposes
-def user_add_xp(user_id, coins):
-    with open('money.txt', 'r') as fp:
-        money = json.load(fp)
-        cooldown = json.load(open("cooldown.txt", "r"))
-
-        time_diff = (datetime.datetime.utcnow() - epoch).total_seconds() - cooldown[user_id]
-        if time_diff >= 120:
-            try:
-                moneyy = int(money[user_id])
-                moneyy += coins
-                money[user_id] = str(moneyy)
-                cooldown[user_id] = (datetime.datetime.utcnow() - epoch).total_seconds()
-                json.dump(money, open('money.txt', 'w'))
-                json.dump(cooldown, open('cooldown.txt', 'w'))
-            except KeyError:
-                with open('cooldown.txt', 'r') as fp:
-                    cooldown = json.load(fp)
-                    cooldown[user_id] = 0
-                    json.dump(cooldown, open('cooldown.txt', 'w'))
-        else:
-            with open('cooldown.txt', 'r') as fp:
-                cooldown = json.load(fp)
-                cooldown[user_id] = 120 - (datetime.datetime.utcnow() - epoch).total_seconds()
-                if cooldown[user_id] < 0:
-                    cooldown[user_id] = 0
-                with open('cooldown.txt', 'w') as fp:
-                    json.dump(cooldown, fp)
-
 #each message
 @client.event
 async def on_message(message):
