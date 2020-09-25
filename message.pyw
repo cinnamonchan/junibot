@@ -381,6 +381,9 @@ async def fish(ctx):
     else:
         if find_location(writer) == 'mountain':
             commonfishlist = commonfishlake
+            rarefishlist = rarefishlake
+            epicfishlist = []
+            legfishlist = legfishlake
             if find_fish("rod", writer) == "training rod":
                 commonchance = 100
                 rarechance = 0
@@ -398,6 +401,10 @@ async def fish(ctx):
                 rarechance = 98
                 epicchance = 0
         elif find_location(writer) == 'town square' or find_location(writer) == 'forest':
+            commonfishlist = commonfishriver
+            rarefishlist = rarefishriver
+            epicfishlist = epicfishriver
+            legfishlist = []
             if find_fish("rod", writer) == "training rod":
                 commonchance = 100
                 rarechance = 0
@@ -415,6 +422,10 @@ async def fish(ctx):
                 rarechance = 90
                 epicchance = 100
         elif find_location(writer) == 'beach' or find_location(writer) == 'tide pools':
+            commonfishlist = commonfishocean
+            rarefishlist = rarefishocean
+            epicfishlist = epicfishocean
+            legfishlist = []
             if find_fish("rod", writer) == "training rod":
                 commonchance = 100
                 rarechance = 0
@@ -432,6 +443,10 @@ async def fish(ctx):
                 rarechance = 90
                 epicchance = 100
         elif find_location(writer) == 'sewer':
+            commonfishlist = commonfishsewer
+            rarefishlist = []
+            epicfishlist = []
+            legfishlist = legfishsewer
             if find_fish("rod", writer) == "training rod":
                 commonchance = 100
                 rarechance = 0
@@ -528,11 +543,52 @@ async def scavenge(ctx):
         elif place == "Spine Crawler":
             end = 'You got squashed by the spine crawler.'
         elif place == "Mineral Fields":
-            end = 'You went mining, but then you realised you were in SCII instead of SDV. However, you cannot escape. Then, an oracle flies by and activates its pulsar beam...'
+            end = 'You go mining, but then you realise you are in SCII instead of SDV. However, you cannot escape and an oracle flies by. It activates its pulsar beam...'
     base = '**Area scavenged: **`'+place+'`.'
     msg = base + ' ' + end
     await ctx.send(msg)
 
+@client.command(pass_context=True)
+async def travel(ctx):
+    content = str(ctx.message.content)
+    writer = str(ctx.message.author.id)
+    place = content[8:]
+    playerplace = find_location(writer)
+    if playerplace == "farm":
+        adjacentplaces = ["farmhouse", "backwoods", "bus stop", "forest"]
+    elif playerplace == "farmhouse":
+        adjacentplaces = ["farm"]
+    elif playerplace == "backwoods":
+        adjacentplaces = ["farm", "mountain"]
+    elif playerplace == "bus stop":
+        adjacentplaces = ["farm", "town square", "desert"]
+    elif playerplace == "town square":
+        adjacentplaces = ["bus stop", "sewers", "blacksmith", "community center", "clinic", "jojamart", "museum", "supermarket", "saloon", "beach", "forest", "mountain"]
+    elif playerplace == "sewers":
+        adjacentplaces = ["mutant bug lair", "forest", "town square"]
+    elif playerplace == "blacksmith":
+        adjacentplaces = ["town square"]
+    elif playerplace == "community center":
+        adjacentplaces = ["town square"]
+    elif playerplace == "clinic":
+        adjacentplaces = ["town square"]
+    elif playerplace == "jojamart":
+        adjacentplaces = ["town square"]
+    elif playerplace == "museum":
+        adjacentplaces = ["town square"]
+    elif playerplace == "supermarket":
+        adjacentplaces = ["town square"]
+    elif playerplace == "saloon":
+        adjacentplaces = ["town square"]
+    elif playerplace == "beach":
+        adjacentplaces = ["town square", "fish shop", "tide pools"]
+    elif playerplace == "fish shop":
+        adjacentplaces = ["beach"]
+    elif playerplace == "tide pools":
+        adjacentplaces = ["beach"]
+    elif playerplace == "forest":
+        adjacentplaces = ["secret woods", "ranch", "wizard's tower", "farm", "town square"]
+    
 @client.command(pass_context=True)
 async def gamble(ctx):
     content = str(ctx.message.content)
