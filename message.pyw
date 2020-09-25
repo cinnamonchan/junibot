@@ -67,7 +67,8 @@ legfishlake = ['legend']
 legfishsewer = ['mutant carp']
 
 locations = ["farm", "farmhouse", "backwoods", "bus stop", "town square", "sewers", "blacksmith", "community center", "clinic", "jojamart", "museum", "supermarket", "saloon", "beach", "fish shop", "tide pools", "forest", "secret woods", "ranch", "wizard's tower", "mountain", "carpenter", "railroad", "spa", "mines", "quarry", "adventurer's guild", "desert", "oasis", "casino", "skull cavern", "mutant bug lair", "witch's hut"]
-
+locationmap = {"farm": ["farmhouse", "backwoods", "bus stop", "forest"], "farmhouse": ["farm"], "backwoods": ["farm", "mountain"], "bus stop": ["farm", "town square", "desert"], "town square": ["bus stop", "sewers", "blacksmith", "community center", "clinic", "jojamart", "museum", "supermarket", "saloon", "beach", "forest", "mountain"], "sewers": ["mutant bug lair", "forest", "town square"], "blacksmith": ["town square"], "community center": ["town square"], "clinic": ["town square"], "jojamart": ["town square"], "museum": ["town square"], "supermarket": ["town square"], "saloon": ["town square"], "beach": ["town square", "fish shop", "tide pools"], "fish shop": ["beach"], "tide pools": ["beach"], "forest": ["secret woods", "ranch", "wizard's tower", "farm", "town square"], "secret woods": ["forest"], "ranch": ["forest"], "wizard's tower": ["forest", "witch's hut"], "mountain": ["carpenter", "railroad", "backwoods", "mines", "quarry", "adventurer's guild", "town square"], "carpenter": ["mountain"], "railroad": ["mountain", "witch's hut", "spa"], "spa": ["railroad"], "mines": ["mountain"], "quarry": ["mountain"], "adventurer's guild": ["mountain"], "desert": ["oasis", "skull cavern", "bus stop"], "oasis": ["desert", "casino"], "casino": ["oasis"], "skull cavern": ["desert"], "mutant bug lair": ["sewers"], "witch's hut": ["railroad", "wizard's hut"]}
+               
 commonforageables = {'wild horseradish': '<:Wild_Horseradish:749493001532997784> `Wild Horseradish`', 'daffodil': '<:Daffodil:749493000719302667> `Daffodil`', 'leek': '<:Leek:749493001012904006> `Leek`', 'dandelion': '<:Dandelion:749493000761245696> `Dandelion`', 'spring onion': '<:Spring_Onion:749493001604300850> `Spring Onion`', 'salmonberry': '<:Salmonberry:749493001318957066> `Salmonberry`'}
 rareforageables = {'morel': '<:Morel:749493001142796378> `Morel`', 'common mushroom': '<:Common_Mushroom:749493000509325343> `Common Mushroom`'}
 
@@ -552,42 +553,19 @@ async def scavenge(ctx):
 async def travel(ctx):
     content = str(ctx.message.content)
     writer = str(ctx.message.author.id)
-    place = content[8:]
+    place = str(content[8:].lower())
     playerplace = find_location(writer)
-    if playerplace == "farm":
-        adjacentplaces = ["farmhouse", "backwoods", "bus stop", "forest"]
-    elif playerplace == "farmhouse":
-        adjacentplaces = ["farm"]
-    elif playerplace == "backwoods":
-        adjacentplaces = ["farm", "mountain"]
-    elif playerplace == "bus stop":
-        adjacentplaces = ["farm", "town square", "desert"]
-    elif playerplace == "town square":
-        adjacentplaces = ["bus stop", "sewers", "blacksmith", "community center", "clinic", "jojamart", "museum", "supermarket", "saloon", "beach", "forest", "mountain"]
-    elif playerplace == "sewers":
-        adjacentplaces = ["mutant bug lair", "forest", "town square"]
-    elif playerplace == "blacksmith":
-        adjacentplaces = ["town square"]
-    elif playerplace == "community center":
-        adjacentplaces = ["town square"]
-    elif playerplace == "clinic":
-        adjacentplaces = ["town square"]
-    elif playerplace == "jojamart":
-        adjacentplaces = ["town square"]
-    elif playerplace == "museum":
-        adjacentplaces = ["town square"]
-    elif playerplace == "supermarket":
-        adjacentplaces = ["town square"]
-    elif playerplace == "saloon":
-        adjacentplaces = ["town square"]
-    elif playerplace == "beach":
-        adjacentplaces = ["town square", "fish shop", "tide pools"]
-    elif playerplace == "fish shop":
-        adjacentplaces = ["beach"]
-    elif playerplace == "tide pools":
-        adjacentplaces = ["beach"]
-    elif playerplace == "forest":
-        adjacentplaces = ["secret woods", "ranch", "wizard's tower", "farm", "town square"]
+	if place in locations:
+		if place in locationmap[playerplace]:
+			change_location(place, writer)
+			place = place.title()
+			await ctx.send(f"You have successfully travelled to {place}!")
+		else:
+			#bfs go here afisjdafodaso
+			#jokes i steal a friend's 
+			await ctx.send("what bfs")
+	else:
+		await ctx.send("That is not a valid location.")
     
 @client.command(pass_context=True)
 async def gamble(ctx):
